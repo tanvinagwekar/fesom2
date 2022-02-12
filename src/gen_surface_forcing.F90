@@ -33,7 +33,6 @@ MODULE g_sbf
    !!   sbc_ini  -- inizialization atmpospheric forcing
    !!   sbc_do   -- provide a sbc (surface boundary conditions) each time step
    !!
-   !!!!!!TEST
    USE o_ARRAYS
    USE MOD_MESH
    USE o_PARAM
@@ -83,10 +82,10 @@ MODULE g_sbf
    logical :: l_snow  = .false.
 
    character(10),      save   :: runoff_data_source='CORE2'
-   character(len=MAX_PATH), save   :: nm_runoff_file    ='runoff.nc'
+   character(len=MAX_PATH), save   :: nm_runoff_file    ='/work/ollie/tnagweka/forcing/runoff_data/CORE2_hist/runoff_fesom_'
 
    character(10),      save   :: sss_data_source   ='CORE2'
-   character(len=MAX_PATH), save   :: nm_sss_data_file  ='PHC2_salx.nc'
+   character(len=MAX_PATH), save   :: nm_sss_data_file  ='/work/ollie/clidyn/forcing/JRA55-do-v1.4.0/PHC2_salx.nc'
 
    logical :: runoff_climatology =.false.
 
@@ -355,7 +354,7 @@ CONTAINS
       call check_nferr(iost,flf%file_name)
       
       ! digg for calendar attribute in time axis variable
-      if (mype==0 .and. use_flpyrcheck) then
+      if (mype==0) then
          iost = nf_inq_attlen(ncid, id_time,'calendar',aux_len)
          iost = nf_get_att(ncid, id_time,'calendar',aux_calendar)
          aux_calendar = aux_calendar(1:aux_len)
@@ -477,16 +476,29 @@ CONTAINS
       !! ** Purpose : Fill names of sbc_flfi array (file names and variable names)
 
       !prepare proper nc file (add year and .nc to the end of the file name from namelist
-      if (l_xwind) write(sbc_flfi(i_xwind)%file_name, *) trim(nm_xwind_file),trim(yyear),'.nc'
-      if (l_ywind) write(sbc_flfi(i_ywind)%file_name, *) trim(nm_ywind_file),trim(yyear),'.nc'
-      if (l_humi)  write(sbc_flfi(i_humi)%file_name,  *) trim(nm_humi_file), trim(yyear),'.nc'
-      if (l_qsr)   write(sbc_flfi(i_qsr)%file_name,   *) trim(nm_qsr_file),  trim(yyear),'.nc'
-      if (l_qlw)   write(sbc_flfi(i_qlw)%file_name,   *) trim(nm_qlw_file),  trim(yyear),'.nc'
-      if (l_tair)  write(sbc_flfi(i_tair)%file_name,  *) trim(nm_tair_file), trim(yyear),'.nc'
-      if (l_prec)  write(sbc_flfi(i_prec)%file_name,  *) trim(nm_prec_file), trim(yyear),'.nc'
-      if (l_snow)  write(sbc_flfi(i_snow)%file_name,  *) trim(nm_snow_file), trim(yyear),'.nc'
-      if (l_mslp)  write(sbc_flfi(i_mslp)%file_name,  *) trim(nm_mslp_file), trim(yyear),'.nc'
-      if (l_cloud) write(sbc_flfi(i_cloud)%file_name, *) trim(nm_cloud_file),trim(yyear),'.nc'
+      ! JRA forcing
+      !if (l_xwind) write(sbc_flfi(i_xwind)%file_name, *) trim(nm_xwind_file),trim(yyear),'.nc'
+      !if (l_ywind) write(sbc_flfi(i_ywind)%file_name, *) trim(nm_ywind_file),trim(yyear),'.nc'
+      !if (l_humi)  write(sbc_flfi(i_humi)%file_name,  *) trim(nm_humi_file), trim(yyear),'.nc'
+      !if (l_qsr)   write(sbc_flfi(i_qsr)%file_name,   *) trim(nm_qsr_file),  trim(yyear),'.nc'
+      !if (l_qlw)   write(sbc_flfi(i_qlw)%file_name,   *) trim(nm_qlw_file),  trim(yyear),'.nc'
+      !if (l_tair)  write(sbc_flfi(i_tair)%file_name,  *) trim(nm_tair_file), trim(yyear),'.nc'
+      !if (l_prec)  write(sbc_flfi(i_prec)%file_name,  *) trim(nm_prec_file), trim(yyear),'.nc'
+      !if (l_snow)  write(sbc_flfi(i_snow)%file_name,  *) trim(nm_snow_file), trim(yyear),'.nc'
+      !if (l_mslp)  write(sbc_flfi(i_mslp)%file_name,  *) trim(nm_mslp_file), trim(yyear),'.nc'
+      !if (l_cloud) write(sbc_flfi(i_cloud)%file_name, *) trim(nm_cloud_file),trim(yyear),'.nc'
+      
+      ! force simulations with output from AWICM
+       if (l_xwind) write(sbc_flfi(i_xwind)%file_name, *) trim(nm_xwind_file),trim(yyear),'01_reduced.nc'
+       if (l_ywind) write(sbc_flfi(i_ywind)%file_name, *) trim(nm_ywind_file),trim(yyear),'01_reduced.nc'
+       if (l_humi)  write(sbc_flfi(i_humi)%file_name,  *) trim(nm_humi_file),trim(yyear),'01_reduced.nc'
+       if (l_qsr)   write(sbc_flfi(i_qsr)%file_name,   *) trim(nm_qsr_file),trim(yyear),'01_reduced.nc'
+       if (l_qlw)   write(sbc_flfi(i_qlw)%file_name,   *) trim(nm_qlw_file),trim(yyear),'01_reduced.nc'
+       if (l_tair)  write(sbc_flfi(i_tair)%file_name,  *) trim(nm_tair_file),trim(yyear),'01_reduced.nc'
+       if (l_prec)  write(sbc_flfi(i_prec)%file_name,  *) trim(nm_prec_file),trim(yyear),'01_reduced.nc'
+       if (l_snow)  write(sbc_flfi(i_snow)%file_name,  *) trim(nm_snow_file),trim(yyear),'01_reduced.nc'
+       if (l_mslp)  write(sbc_flfi(i_mslp)%file_name,  *) trim(nm_mslp_file),trim(yyear),'01_reduced.nc'
+       if (l_cloud) write(sbc_flfi(i_cloud)%file_name, *) trim(nm_cloud_file),trim(yyear),'01_reduced.nc'
 
       if (l_xwind) sbc_flfi(i_xwind)%file_name=ADJUSTL(trim(sbc_flfi(i_xwind)%file_name))
       if (l_ywind) sbc_flfi(i_ywind)%file_name=ADJUSTL(trim(sbc_flfi(i_ywind)%file_name))
@@ -1052,6 +1064,7 @@ CONTAINS
       real(wp)     :: rdate ! date
       integer      :: fld_idx, i
       logical      :: do_rotation, force_newcoeff, update_monthly_flag
+      logical      :: update_daily_flag
       integer      :: yyyy, dd, mm
       integer,   pointer   :: nc_Ntime, t_indx, t_indx_p1
       real(wp),  pointer   :: nc_time(:)
@@ -1100,16 +1113,20 @@ CONTAINS
       !==========================================================================
 
       ! prepare a flag which checks whether to update monthly data (SSS, river runoff)
-      update_monthly_flag=( (day_in_month==num_day_in_month(fleapyear,month) .AND. timenew==86400._WP) .OR. mstep==1  )
+      update_monthly_flag=((day_in_month==num_day_in_month(fleapyear,month) .and. timenew==86400._WP) .or. mstep==1)
+      ! same for daily forcing (river runoff from AWICM)
+      update_daily_flag = ( (timenew == 86400._WP) .or. mstep == 1)
 
       ! read in SSS for applying SSS restoring
       if (surf_relax_S > 0._WP) then
          if (sss_data_source=='CORE1' .or. sss_data_source=='CORE2') then
             if (update_monthly_flag) then
+               !i=month+1
                i=month
-               if (mstep > 1) i=i+1 
+               if (mstep > 1) i=i+1
                if (i > 12) i=1
                if (mype==0) write(*,*) 'Updating SSS restoring data for month ', i 
+               write(*,*) nm_sss_data_file
                call read_other_NetCDF(nm_sss_data_file, 'SALT', i, Ssurf, .true., mesh) 
             end if
          end if
@@ -1121,11 +1138,13 @@ CONTAINS
        if(update_monthly_flag) then
          if(runoff_climatology) then
            !climatology monthly mean
-           i=month
+           !i=month+1
+           i = month
            if (mstep > 1) i=i+1 
            if (i > 12) i=1
            if (mype==0) write(*,*) 'Updating monthly climatology runoff for month ', i 
            filename=trim(nm_runoff_file)
+           write(*,*) nm_runoff_file
            call read_2ddata_on_grid_NetCDF(filename,'runoff', i, runoff, mesh)
 
            !kg/m2/s -> m/s
@@ -1133,11 +1152,14 @@ CONTAINS
 
          else
            !monthly data
-           i=month
+
+           !i=month+1
+           i = month
            if (mstep > 1) i=i+1 
            if (i > 12) i=1
            if (mype==0) write(*,*) 'Updating monthly runoff for month ', i 
-           filename=trim(nm_runoff_file)//cyearnew//'.nc' 
+           filename=trim(nm_runoff_file)//cyearnew//'.nc'
+           write(*,*) nm_runoff_file 
            call read_2ddata_on_grid_NetCDF(filename,'runoff', i, runoff, mesh)
 
            !kg/m2/s -> m/s
@@ -1147,6 +1169,17 @@ CONTAINS
        end if
 
      end if
+     !river runoff from AWICM
+     if(runoff_data_source == 'AWICM') then
+        if(update_daily_flag) then
+          ! daily data (already in m/s)
+           i = daynew
+           filename = trim(nm_runoff_file)//cyearnew//'0101_redistributed.nc' !runoff_fesom_19630101_redistributed.nc
+           write(*,*)nm_runoff_file
+           !if (mype==0) write(*,*) filenames
+           call read_2ddata_on_grid_NetCDF(filename, 'runoff', i, runoff, mesh)
+        end if
+     end if 
 
 
       ! interpolate in time
