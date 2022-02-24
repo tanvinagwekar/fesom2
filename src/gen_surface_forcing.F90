@@ -32,7 +32,7 @@ MODULE g_sbf
    !! public:
    !!   sbc_ini  -- inizialization atmpospheric forcing
    !!   sbc_do   -- provide a sbc (surface boundary conditions) each time step
-   !!
+   !!Test
    USE o_ARRAYS
    USE MOD_MESH
    USE o_PARAM
