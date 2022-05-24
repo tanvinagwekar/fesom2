@@ -1126,7 +1126,7 @@ CONTAINS
                if (mstep > 1) i=i+1
                if (i > 12) i=1
                if (mype==0) write(*,*) 'Updating SSS restoring data for month ', i 
-               write(*,*) nm_sss_data_file
+               !write(*,*) nm_sss_data_file
                call read_other_NetCDF(nm_sss_data_file, 'SALT', i, Ssurf, .true., mesh) 
             end if
          end if
@@ -1144,7 +1144,7 @@ CONTAINS
            if (i > 12) i=1
            if (mype==0) write(*,*) 'Updating monthly climatology runoff for month ', i 
            filename=trim(nm_runoff_file)
-           write(*,*) nm_runoff_file
+           !write(*,*) nm_runoff_file
            call read_2ddata_on_grid_NetCDF(filename,'runoff', i, runoff, mesh)
 
            !kg/m2/s -> m/s
@@ -1159,7 +1159,7 @@ CONTAINS
            if (i > 12) i=1
            if (mype==0) write(*,*) 'Updating monthly runoff for month ', i 
            filename=trim(nm_runoff_file)//cyearnew//'.nc'
-           write(*,*) nm_runoff_file 
+           !write(*,*) nm_runoff_file 
            call read_2ddata_on_grid_NetCDF(filename,'runoff', i, runoff, mesh)
 
            !kg/m2/s -> m/s
@@ -1175,7 +1175,7 @@ CONTAINS
           ! daily data (already in m/s)
            i = daynew
            filename = trim(nm_runoff_file)//cyearnew//'0101_redistributed.nc' !runoff_fesom_19630101_redistributed.nc
-           write(*,*)nm_runoff_file
+           !write(*,*)nm_runoff_file
            !if (mype==0) write(*,*) filenames
            call read_2ddata_on_grid_NetCDF(filename, 'runoff', i, runoff, mesh)
         end if
