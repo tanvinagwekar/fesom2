@@ -146,8 +146,8 @@ subroutine Atm_input(mesh)
 
   real(kind=8), allocatable :: ncdata(:)
   integer	                :: status, ncid, varid
-  character(300)            :: Ironname, CO2filename, DustNfilename
-  character(15)             :: Ironvari, CO2vari, Nvari
+  character(300)            :: Ironname, CO2filename, DustNfilename, Olivinefilename
+  character(25)             :: Ironvari, CO2vari, Nvari, Nolv
   integer, dimension(2)     :: istart, icount
   integer                   :: CO2start, CO2count
   integer                   :: firstyearofcurrentCO2cycle, totnumyear
@@ -231,8 +231,8 @@ endif
     else  
 
 !     CO2filename = trim(REcoMDataPath)//'MonthlyAtmCO2_2019.nc'
-!     CO2filename = trim(REcoMDataPath)//'MonthlyAtmCO2_gcb2020.nc'
-     CO2filename = trim(REcoMDataPath)//'MonthlyAtmCO2_gcb2021.nc'
+     CO2filename = trim(REcoMDataPath)//'MonthlyAtmCO2_gcb2020.nc'
+     !CO2filename = trim(REcoMDataPath)//'MonthlyAtmCO2_ssp126.nc'
 
      totnumyear                 = lastyearoffesomcycle-firstyearoffesomcycle+1
      firstyearofcurrentCO2cycle = lastyearoffesomcycle-numofCO2cycles*totnumyear+(currentCO2cycle-1)*totnumyear
@@ -281,6 +281,20 @@ endif
     else
       GloNDust(:) = 0.d0 ! no aeolian N input 
     end if
+    
+    ! olivine deposition test
+    if (useolivine) then
+      i=1 
+      Olivinefilename = trim(REcoMDataPath)//'olivine_test.nc'
+      Nolv = 'olivine_deposition'
+      !write(*,*)Olivinefilename
+      !write(*,*)Nolv
+      if (mype==0) write(*,*) 'Updating olivine deposition data for month', i
+      call read_2ddata_on_grid_NetCDF(Olivinefilename, Nolv, i, GloODust, mesh)
+      !write(*,*)'done with function'
+    else
+      GloODust(:) = 0.d0 !no olivine input
+    end if  
   else
     return
   end if

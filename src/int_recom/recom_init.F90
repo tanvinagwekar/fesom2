@@ -57,6 +57,9 @@ subroutine recom_init(mesh)
     allocate(GloNDust(node_size))
     allocate(AtmNInput(node_size))
     
+    allocate(GloODust(node_size))
+    allocate(AtmOInput(node_size))    !olivine deposition test
+    
     ! cosAI: cos of angle of incidence
     allocate(cosAI(node_size))
 
@@ -139,6 +142,9 @@ subroutine recom_init(mesh)
 
     GloNDust = 0.d0
     AtmNInput = 0.d0
+    
+    GloODust = 0.d0
+    AtmOInput = 0.d0    !olivine deposition test
 
     cosAI = 0.d0
 

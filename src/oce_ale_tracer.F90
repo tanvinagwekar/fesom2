@@ -1460,7 +1460,7 @@ use REcoM_ciso
 !  endif
     CASE (1003) ! Alk
         ! --> Here we need the alkalinity flux
-        bc_surface= dt*(virtual_alk(n) &  
+        bc_surface= dt*(AtmOInput(n) + virtual_alk(n) &  
                     + relax_alk(n) + RiverAlk2D(n) * is_riverinput)
 !  if (mype==0) then
 !     write(*,*) '____________________________________________________________'
@@ -1477,13 +1477,13 @@ use REcoM_ciso
     CASE (1018) ! DSi
         bc_surface=dt*(RiverDSi2D(n) * is_riverinput + ErosionTSi2D(n) * is_erosioninput)
     CASE (1019) ! Fe
-        bc_surface= dt*AtmFeInput(n)
+        bc_surface= dt*(AtmFeInput(n)+ AtmOInput(n))
 !  if (mype==0) then
 !     write(*,*) '____________________________________________________________'
 !     write(*,*) ' --> Fe_surface,  = ', bc_surface
 !  endif
     CASE (1020:1021) ! Si
-        bc_surface=0.0_WP  ! OG added bc for recom fields 
+        bc_surface=0.0_WP + AtmOInput(n)  ! OG added bc for recom fields 
     CASE (1022) ! OXY
         bc_surface= dt*GloO2flux_seaicemask(n)
 !  if (mype==0) then

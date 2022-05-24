@@ -71,12 +71,13 @@ module recom_config
   Logical                :: use_Fe2N              = .true.               ! use Fe2N instead of Fe2C, as in MITgcm version
   Logical                :: use_photodamage       = .false.             ! use Alvarez et al (2018) for chlorophyll degradation
   logical                :: HetRespFlux_plus      = .true.     !MB More stable computation of zooplankton respiration fluxes adding a small number to HetN
-  character(100)         :: REcoMDataPath         = '/work/ollie/jhauck/forcing/core_new_REcoMforcing/'
+  character(100)         :: REcoMDataPath         = '/work/ollie/tnagweka/forcing_file/'
   logical                :: restore_alkalinity    = .true.
   logical                :: useRivers             = .false.
   logical                :: useErosion            = .false.
   logical                :: NitrogenSS            = .false.   ! This one only activates rivers! And in principle denitrification, but denitrification is commented out. When set to true, external sources and sinks of nitrogen are activated (Riverine, aeolian and denitrification)
   logical                :: useAeolianN           = .false.   ! When set to true, aeolian nitrogen deposition is activated
+  logical                :: useolivine            = .false.    !test for olivine deposition
   integer                :: firstyearoffesomcycle = 1948      ! The first year of the actual physical forcing (e.g. JRA-55) used
   integer                :: lastyearoffesomcycle  = 2009      ! Last year of the actual physical forcing used
   integer                :: numofCO2cycles        = 1         ! Number of cycles of the forcing planned 
@@ -102,7 +103,7 @@ module recom_config
                        NitrogenSS,                        useAeolianN,           firstyearoffesomcycle,   &
                        lastyearoffesomcycle,              numofCO2cycles,        currentCO2cycle,         &
                        DIC_PI,                            Nmocsy,                recom_debug,             &
-                       ciso,                              benthos_num
+                       ciso,                              benthos_num,           useolivine
 !!------------------------------------------------------------------------------
 !! *** Sinking ***
   Real(kind=8)                 :: Vdet_a         = 0.0288       ! [1/day]
@@ -469,10 +470,13 @@ Module REcoM_GloVar
   Real(kind=8),allocatable,dimension(:,:) :: Benthos          ! 4 types of benthos-tracers with size [4 n2d]
   Real(kind=8),allocatable,dimension(:)   :: GloFeDust        ! [umol/m2/s] Monthly 2D field of iron soluted in surface water from dust
   Real(kind=8),allocatable,dimension(:)   :: GloNDust         ! [mmol/m2/s] 10-year mean 2D fields of nitrogen soluted in surface water from dust
+  Real(kind=8),allocatable,dimension(:)   :: GloODust         ![mmol/m2/s] olivine deposition test
+  
   Real(kind=8),dimension(12)              :: AtmCO2           ! [uatm] Atmospheric CO2 partial pressure. One value for the whole planet for each month
 
   Real(kind=8),allocatable,dimension(:)   :: AtmFeInput       ! [umol/m2/s] Includes ice, but is, other than that identlical to GloFeDust
   Real(kind=8),allocatable,dimension(:)   :: AtmNInput        ! [umol/m2/s] Includes ice, but is, other than that identlical to GloNDust
+  Real(kind=8),allocatable,dimension(:)   :: AtmOInput        ! test olivine deposition
   Real(kind=8),allocatable,dimension(:)   :: GloPCO2surf      ! [uatm] Surface ocean CO2 partial pressure
   Real(kind=8),allocatable,dimension(:)   :: GloCO2flux       ! [mmol/m2/day] Positive downwards
   Real(kind=8),allocatable,dimension(:)   :: GloCO2flux_seaicemask       ! [mmol/m2/day] Positive downwards
@@ -540,6 +544,7 @@ Module REcoM_locVar
   Real(kind=8) :: k1, k2, kw, kb, ff        ! Common block: Equilibrium_constants
   Real(kind=8) :: FeDust                    ! [umol/m2/s]
   Real(kind=8) :: NDust                     ! [mmol/m2/s]
+  Real(kind=8) :: ODust                     ! [mmol/m2/s] olivine deposition test
   Real(kind=8) :: Loc_ice_conc(1)           ! Used to calculate flux of DIC in REcoM 0 -> 1
   Real(kind=8) :: LocAtmCO2(1)              ! [uatm]
   Real(kind=8) :: LocDiags2D(8)

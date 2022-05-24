@@ -333,6 +333,11 @@ CASE ('aN        ')
     call def_stream(nod2D,  myDim_nod2D,   'aN','Atmospheric DIN input','mmolN/m2/s', AtmNInput(:), io_list(i)%freq, io_list(i)%unit, io_list(i)%precision, mesh)
     end if
 
+CASE ('aolv       ')
+    if (use_REcoM) then
+    call def_stream(nod2D,  myDim_nod2D,   'aolv','Atmospheric olivine input','mmolN/m2/s', AtmOInput(:), io_list(i)%freq, io_list(i)%unit, io_list(i)%precision, mesh)
+    end if
+
 CASE ('denb      ')
     if (use_REcoM) then
     call def_stream(nod2D,  myDim_nod2D,   'denb','Benthic denitrification rate','mmol/m2', DenitBen(:), io_list(i)%freq, io_list(i)%unit, io_list(i)%precision, mesh)
