@@ -72,8 +72,9 @@ if (recom_debug .and. mype==0) print *, achar(27)//'[36m'//'     --> Atm_input'/
 
 if (recom_debug .and. mype==0) print *, achar(27)//'[36m'//'     --> bio_fluxes'//achar(27)//'[0m'
 
+if (restore_alkalinity) then
   call bio_fluxes(mesh)       !<  alkalinity restoring/ virtual flux is possible
-
+end if
 ! ======================================================================================
 !********************************* LOOP STARTS *****************************************			
 
@@ -133,6 +134,7 @@ if (recom_debug .and. mype==0) print *, achar(27)//'[36m'//'     --> bio_fluxes'
      !!---- a_ice(row): Ice concentration in the local node
      FeDust = GloFeDust(n) * (1 - a_ice(n)) * dust_sol    
      NDust = GloNDust(n)  * (1 - a_ice(n))
+     ODust = GloODust(n)  * (1 - a_ice(n))
 
      allocate(Diags3Dloc(nzmax,8))
      Diags3Dloc(:,:) = 0.d0
@@ -166,6 +168,7 @@ if (recom_debug .and. mype==0) print *, achar(27)//'[36m'//'     --> REcoM_Forci
      GloHplus(n)                  = hplus
      AtmFeInput(n)                = FeDust
      AtmNInput(n)                 = NDust 
+     AtmOInput(n)                 = ODust
      DenitBen(n)                  = LocDenit
 
 !if (mype==0) write (*,*) "decayBenthos_Si mmol/m2/day= " , decayBenthos(3)
@@ -223,6 +226,7 @@ if (recom_debug .and. mype==0) print *, achar(27)//'[36m'//'     --> REcoM_Forci
   call exchange_nod(GloHplus)	
   call exchange_nod(AtmFeInput)	
   call exchange_nod(AtmNInput)	
+  call exchange_nod(AtmOInput)
   call exchange_nod(DenitBen)	
   call exchange_nod(PAR3D)	
 !  do n=1, 2
