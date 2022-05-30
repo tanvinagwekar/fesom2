@@ -1,0 +1,10 @@
++ ulimit -s unlimited
+++ echo 15708052
+++ cut -d. -f1
++ JOBID=15708052
++ date
++ srun --mpi=pmi2 ./fesom.x
++ date
++ Resultpath=//work/ollie/tnagweka/historical_new_CORE/
++ test -e //work/ollie/tnagweka/historical_new_CORE//fesom.2014.oce.restart.nc
++ exit

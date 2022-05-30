@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --job-name=f2.1rB
+#SBATCH -p mpp
+#SBATCH --ntasks=288
+#SBATCH --time=03:30:00
+#SBATCH -o slurm-out.out
+#SBATCH -e slurm-err.out
+module load intel.compiler intel.mpi netcdf/4.4.0_intel
+module load centoslibs
+
+set -x
+
+ulimit -s unlimited
+
+# determine JOBID
+JOBID=`echo $SLURM_JOB_ID |cut -d"." -f1`
+
+date
+srun --mpi=pmi2 ./fesom.x > "fesom2.0.out"
+date
